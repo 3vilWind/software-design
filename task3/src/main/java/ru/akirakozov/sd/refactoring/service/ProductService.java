@@ -1,6 +1,7 @@
 package ru.akirakozov.sd.refactoring.service;
 
 import ru.akirakozov.sd.refactoring.gateways.ProductRepository;
+import ru.akirakozov.sd.refactoring.model.Product;
 import ru.akirakozov.sd.refactoring.model.ProductIn;
 
 public class ProductService {
@@ -13,9 +14,11 @@ public class ProductService {
     public void addProduct(ProductIn data) {
         this.productRepository.addProduct(data);
     }
-//
-//    public Product[] getAllProducts() {}
-//
+
+    public Product[] getAllProducts() {
+        return this.productRepository.getAllProducts();
+    }
+
 //    public Product getCheapestProduct() {}
 //
 //    public Product getMostExpensiveProduct() {}

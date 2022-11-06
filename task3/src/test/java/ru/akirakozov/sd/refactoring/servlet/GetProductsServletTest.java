@@ -28,7 +28,7 @@ public class GetProductsServletTest {
     @BeforeEach
     void setUp() throws SQLException {
         MockitoAnnotations.openMocks(this);
-        servlet = new GetProductsServlet();
+        servlet = new GetProductsServlet(Utils.getProductServiceForTestDatabase());
         Utils.cleanTestDatabase();
     }
 

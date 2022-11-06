@@ -1,5 +1,8 @@
 package ru.akirakozov.sd.refactoring;
 
+import ru.akirakozov.sd.refactoring.gateways.ProductRepository;
+import ru.akirakozov.sd.refactoring.service.ProductService;
+
 import java.lang.reflect.Array;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -7,6 +10,11 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 public class Utils {
+
+    public static ProductService getProductServiceForTestDatabase() {
+        ProductRepository productRepository = new ProductRepository("jdbc:sqlite:test.db");
+        return new ProductService(productRepository);
+    }
 
     public static void cleanTestDatabase() throws SQLException {
         try (Connection c = getTestDatabase()) {

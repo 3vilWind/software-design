@@ -41,7 +41,7 @@ public class Main {
         ProductService productService = new ProductService(productRepository);
 
         context.addServlet(new ServletHolder(new AddProductServlet(productService)), "/add-product");
-        context.addServlet(new ServletHolder(new GetProductsServlet()),"/get-products");
+        context.addServlet(new ServletHolder(new GetProductsServlet(productService)),"/get-products");
         context.addServlet(new ServletHolder(new QueryServlet()),"/query");
 
         server.start();

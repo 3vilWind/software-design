@@ -33,9 +33,7 @@ public class AddProductServletTest {
     @BeforeEach
     void setUp() throws SQLException {
         MockitoAnnotations.openMocks(this);
-        ProductRepository productRepository = new ProductRepository("jdbc:sqlite:test.db");
-        ProductService productService = new ProductService(productRepository);
-        servlet = new AddProductServlet(productService);
+        servlet = new AddProductServlet(Utils.getProductServiceForTestDatabase());
         Utils.cleanTestDatabase();
     }
 
