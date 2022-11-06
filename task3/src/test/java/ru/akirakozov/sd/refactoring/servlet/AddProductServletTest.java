@@ -6,13 +6,18 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import ru.akirakozov.sd.refactoring.Utils;
+import ru.akirakozov.sd.refactoring.gateways.ProductRepository;
+import ru.akirakozov.sd.refactoring.service.ProductService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -28,7 +33,9 @@ public class AddProductServletTest {
     @BeforeEach
     void setUp() throws SQLException {
         MockitoAnnotations.openMocks(this);
-        servlet = new AddProductServlet();
+        ProductRepository productRepository = new ProductRepository("jdbc:sqlite:test.db");
+        ProductService productService = new ProductService(productRepository);
+        servlet = new AddProductServlet(productService);
         Utils.cleanTestDatabase();
     }
 

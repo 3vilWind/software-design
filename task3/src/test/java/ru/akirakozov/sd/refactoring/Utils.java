@@ -28,7 +28,7 @@ public class Utils {
     }
 
     private static void dropTable(Connection c) throws SQLException {
-        String sql = "DROP TABLE PRODUCT";
+        String sql = "DROP TABLE IF EXISTS PRODUCT";
         Statement stmt = c.createStatement();
 
         stmt.executeUpdate(sql);
