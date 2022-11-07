@@ -23,6 +23,10 @@ public class Main {
     static final String DATABASE_URL = "jdbc:sqlite:test.db";
 
     public static void main(String[] args) throws Exception {
+        ProductRepository productRepository = new ProductSQLRepository("jdbc:sqlite:test.db");
+        ProductService productService = new ProductService(productRepository);
+        Renderer renderer = new HTMLRenderer();
+
         try (Connection c = DriverManager.getConnection(DATABASE_URL)) {
             String sql = "CREATE TABLE IF NOT EXISTS PRODUCT" +
                     "(ID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL," +
@@ -40,12 +44,8 @@ public class Main {
         context.setContextPath("/");
         server.setHandler(context);
 
-        ProductRepository productRepository = new ProductSQLRepository("jdbc:sqlite:test.db");
-        ProductService productService = new ProductService(productRepository);
-        Renderer renderer = new HTMLRenderer();
-
         context.addServlet(new ServletHolder(new AddProductServlet(productService, renderer)), "/add-product");
-        context.addServlet(new ServletHolder(new GetProductsServlet(productService)),"/get-products");
+        context.addServlet(new ServletHolder(new GetProductsServlet(productService, renderer)),"/get-products");
         context.addServlet(new ServletHolder(new QueryServlet(productService, renderer)),"/query");
 
         server.start();

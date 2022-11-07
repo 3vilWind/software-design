@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import ru.akirakozov.sd.refactoring.Utils;
+import ru.akirakozov.sd.refactoring.gateways.HTMLRenderer;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -28,7 +29,7 @@ public class GetProductsServletTest {
     @BeforeEach
     void setUp() throws SQLException {
         MockitoAnnotations.openMocks(this);
-        servlet = new GetProductsServlet(Utils.getProductServiceForTestDatabase());
+        servlet = new GetProductsServlet(Utils.getProductServiceForTestDatabase(), new HTMLRenderer());
         Utils.cleanTestDatabase();
     }
 
