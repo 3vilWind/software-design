@@ -22,6 +22,11 @@ public class HTMLRenderer implements Renderer {
         return "Unknown command: " + query;
     }
 
+    @Override
+    public String renderSuccessfulAddProductResponse() {
+        return renderRaw(new String[]{"OK"});
+    }
+
     protected static String renderProductQueryResult(Product product, String header) {
         return renderIntoBody(new String[]{header, renderProduct(product)});
     }
@@ -42,6 +47,15 @@ public class HTMLRenderer implements Renderer {
             printWriter.println(line);
         }
         printWriter.println("</body></html>");
+        return stringWriter.toString();
+    }
+
+    protected static String renderRaw(String[] data) {
+        StringWriter stringWriter = new StringWriter();
+        PrintWriter printWriter = new PrintWriter(stringWriter);
+        for (String line : data) {
+            printWriter.println(line);
+        }
         return stringWriter.toString();
     }
 }

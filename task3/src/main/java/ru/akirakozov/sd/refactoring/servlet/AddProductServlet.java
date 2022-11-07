@@ -1,5 +1,6 @@
 package ru.akirakozov.sd.refactoring.servlet;
 
+import ru.akirakozov.sd.refactoring.gateways.Renderer;
 import ru.akirakozov.sd.refactoring.model.ProductIn;
 import ru.akirakozov.sd.refactoring.service.ProductService;
 
@@ -13,9 +14,11 @@ import java.io.IOException;
  */
 public class AddProductServlet extends HttpServlet {
     protected ProductService productService;
+    protected Renderer renderer;
 
-    public AddProductServlet(ProductService productService) {
+    public AddProductServlet(ProductService productService, Renderer renderer) {
         this.productService = productService;
+        this.renderer = renderer;
     }
 
     @Override
@@ -25,8 +28,8 @@ public class AddProductServlet extends HttpServlet {
 
         this.productService.addProduct(new ProductIn(name, price));
 
+        response.getWriter().println(renderer.renderSuccessfulAddProductResponse());
         response.setContentType("text/html");
         response.setStatus(HttpServletResponse.SC_OK);
-        response.getWriter().println("OK");
     }
 }

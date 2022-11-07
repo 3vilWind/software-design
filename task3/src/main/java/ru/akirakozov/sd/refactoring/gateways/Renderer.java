@@ -5,4 +5,5 @@ import ru.akirakozov.sd.refactoring.model.query.QueryResult;
 public interface Renderer {
     String renderProductQueryResponse(QueryResult result);
     String renderUnknownQueryResponse(String query);
+    String renderSuccessfulAddProductResponse();
 }

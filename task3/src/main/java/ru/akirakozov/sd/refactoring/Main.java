@@ -44,7 +44,7 @@ public class Main {
         ProductService productService = new ProductService(productRepository);
         Renderer renderer = new HTMLRenderer();
 
-        context.addServlet(new ServletHolder(new AddProductServlet(productService)), "/add-product");
+        context.addServlet(new ServletHolder(new AddProductServlet(productService, renderer)), "/add-product");
         context.addServlet(new ServletHolder(new GetProductsServlet(productService)),"/get-products");
         context.addServlet(new ServletHolder(new QueryServlet(productService, renderer)),"/query");
 
