@@ -26,7 +26,19 @@ public class ProductSQLRepository implements ProductRepository {
     }
 
     public Product[] getAllProducts() {
-        return queryMultipleProducts("SELECT * FROM PRODUCT");
+        ArrayList<Product> result = new ArrayList<>();
+        try (Connection c = this.getConnection();
+             Statement stmt = c.createStatement();
+             ResultSet rs = stmt.executeQuery("SELECT * FROM PRODUCT")) {
+
+            while (rs.next()) {
+                result.add(deserializeProduct(rs));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        Product[] resultArray = (Product[]) Array.newInstance(Product.class, result.size());
+        return result.toArray(resultArray);
     }
 
     public Product getCheapestProduct() {
@@ -45,24 +57,19 @@ public class ProductSQLRepository implements ProductRepository {
         return queryFirstInt("SELECT COUNT(*) FROM PRODUCT");
     }
 
-    protected Connection getConnection() throws SQLException {
-        return DriverManager.getConnection(this.databaseUrl);
+    public void initDatabase() throws SQLException {
+        try (Connection c = getConnection();
+             Statement stmt = c.createStatement()) {
+            String sql = "CREATE TABLE IF NOT EXISTS PRODUCT" +
+                    "(ID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL," +
+                    " NAME           TEXT    NOT NULL, " +
+                    " PRICE          INT     NOT NULL)";
+            stmt.executeUpdate(sql);
+        }
     }
 
-    protected Product[] queryMultipleProducts(String sql) {
-        ArrayList<Product> result = new ArrayList<>();
-        try (Connection c = this.getConnection();
-             Statement stmt = c.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
-
-            while (rs.next()) {
-                result.add(deserializeProduct(rs));
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-        Product[] resultArray = (Product[]) Array.newInstance(Product.class, result.size());
-        return result.toArray(resultArray);
+    protected Connection getConnection() throws SQLException {
+        return DriverManager.getConnection(this.databaseUrl);
     }
 
     protected Product queryFirstProduct(String sql) {

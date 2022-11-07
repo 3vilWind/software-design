@@ -1,5 +1,6 @@
 package ru.akirakozov.sd.refactoring;
 
+import ru.akirakozov.sd.refactoring.gateways.ProductRepository;
 import ru.akirakozov.sd.refactoring.gateways.ProductSQLRepository;
 import ru.akirakozov.sd.refactoring.service.ProductService;
 
@@ -12,7 +13,7 @@ import java.sql.Statement;
 public class Utils {
 
     public static ProductService getProductServiceForTestDatabase() {
-        ProductSQLRepository productRepository = new ProductSQLRepository("jdbc:sqlite:test.db");
+        ProductRepository productRepository = new ProductSQLRepository("jdbc:sqlite:test.db");
         return new ProductService(productRepository);
     }
 
@@ -37,10 +38,9 @@ public class Utils {
 
     private static void dropTable(Connection c) throws SQLException {
         String sql = "DROP TABLE IF EXISTS PRODUCT";
-        Statement stmt = c.createStatement();
-
-        stmt.executeUpdate(sql);
-        stmt.close();
+        try (Statement stmt = c.createStatement()) {
+            stmt.executeUpdate(sql);
+        }
     }
 
     private static void createTable(Connection c) throws SQLException {
@@ -48,9 +48,8 @@ public class Utils {
                 "(ID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL," +
                 " NAME           TEXT    NOT NULL, " +
                 " PRICE          INT     NOT NULL)";
-        Statement stmt = c.createStatement();
-
-        stmt.executeUpdate(sql);
-        stmt.close();
+        try (Statement stmt = c.createStatement()) {
+            stmt.executeUpdate(sql);
+        }
     }
 }

@@ -1,5 +1,6 @@
 package ru.akirakozov.sd.refactoring.servlet;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -28,12 +29,18 @@ public class AddProductServletTest {
     private HttpServletResponse response;
 
     private AddProductServlet servlet;
+    private AutoCloseable closeable;
 
     @BeforeEach
     void setUp() throws SQLException {
-        MockitoAnnotations.openMocks(this);
+        closeable = MockitoAnnotations.openMocks(this);
         servlet = new AddProductServlet(Utils.getProductServiceForTestDatabase(), new HTMLRenderer());
         Utils.cleanTestDatabase();
+    }
+
+    @AfterEach
+    void tearDown() throws Exception {
+        closeable.close();
     }
 
     @Test
@@ -48,17 +55,15 @@ public class AddProductServletTest {
         Assertions.assertEquals(stringWriter.toString().trim(), "OK");
         verify(response).setStatus(HttpServletResponse.SC_OK);
 
-        try (Connection c = Utils.getTestDatabase()) {
-            Statement stmt = c.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT * FROM PRODUCT");
+        try (Connection c = Utils.getTestDatabase();
+             Statement stmt = c.createStatement()) {
 
-            Assertions.assertTrue(rs.next());
-            Assertions.assertEquals("cookies", rs.getString("name"));
-            Assertions.assertEquals(100, rs.getInt("price"));
-            Assertions.assertFalse(rs.next());
-
-            rs.close();
-            stmt.close();
+            try (ResultSet rs = stmt.executeQuery("SELECT * FROM PRODUCT")) {
+                Assertions.assertTrue(rs.next());
+                Assertions.assertEquals("cookies", rs.getString("name"));
+                Assertions.assertEquals(100, rs.getInt("price"));
+                Assertions.assertFalse(rs.next());
+            }
         }
     }
 }

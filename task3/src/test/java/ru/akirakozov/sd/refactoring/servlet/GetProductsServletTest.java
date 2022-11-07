@@ -1,5 +1,6 @@
 package ru.akirakozov.sd.refactoring.servlet;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -25,12 +26,18 @@ public class GetProductsServletTest {
     private HttpServletResponse response;
 
     private GetProductsServlet servlet;
+    private AutoCloseable closeable;
 
     @BeforeEach
     void setUp() throws SQLException {
-        MockitoAnnotations.openMocks(this);
+        closeable = MockitoAnnotations.openMocks(this);
         servlet = new GetProductsServlet(Utils.getProductServiceForTestDatabase(), new HTMLRenderer());
         Utils.cleanTestDatabase();
+    }
+
+    @AfterEach
+    void tearDown() throws Exception {
+        closeable.close();
     }
 
     @Test
@@ -47,10 +54,9 @@ public class GetProductsServletTest {
 
     @Test
     void testGetTwoProducts() throws IOException, SQLException {
-        try (Connection c = Utils.getTestDatabase()) {
-            Statement stmt = c.createStatement();
+        try (Connection c = Utils.getTestDatabase();
+             Statement stmt = c.createStatement()) {
             stmt.executeUpdate("INSERT INTO PRODUCT VALUES (1, 'cookies', 100), (2, 'memes', 300)");
-            stmt.close();
         }
 
         StringWriter stringWriter = new StringWriter();
