@@ -1,6 +1,6 @@
 package ru.akirakozov.sd.refactoring;
 
-import ru.akirakozov.sd.refactoring.gateways.ProductRepository;
+import ru.akirakozov.sd.refactoring.gateways.ProductSQLRepository;
 import ru.akirakozov.sd.refactoring.service.ProductService;
 
 import java.lang.reflect.Array;
@@ -12,7 +12,7 @@ import java.sql.Statement;
 public class Utils {
 
     public static ProductService getProductServiceForTestDatabase() {
-        ProductRepository productRepository = new ProductRepository("jdbc:sqlite:test.db");
+        ProductSQLRepository productRepository = new ProductSQLRepository("jdbc:sqlite:test.db");
         return new ProductService(productRepository);
     }
 

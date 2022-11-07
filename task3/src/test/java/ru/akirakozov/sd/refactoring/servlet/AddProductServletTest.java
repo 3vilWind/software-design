@@ -6,8 +6,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import ru.akirakozov.sd.refactoring.Utils;
-import ru.akirakozov.sd.refactoring.gateways.ProductRepository;
-import ru.akirakozov.sd.refactoring.service.ProductService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

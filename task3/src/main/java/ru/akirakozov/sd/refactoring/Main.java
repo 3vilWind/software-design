@@ -3,7 +3,10 @@ package ru.akirakozov.sd.refactoring;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
+import ru.akirakozov.sd.refactoring.gateways.HTMLRenderer;
 import ru.akirakozov.sd.refactoring.gateways.ProductRepository;
+import ru.akirakozov.sd.refactoring.gateways.ProductSQLRepository;
+import ru.akirakozov.sd.refactoring.gateways.Renderer;
 import ru.akirakozov.sd.refactoring.service.ProductService;
 import ru.akirakozov.sd.refactoring.servlet.AddProductServlet;
 import ru.akirakozov.sd.refactoring.servlet.GetProductsServlet;
@@ -37,12 +40,13 @@ public class Main {
         context.setContextPath("/");
         server.setHandler(context);
 
-        ProductRepository productRepository = new ProductRepository("jdbc:sqlite:test.db");
+        ProductRepository productRepository = new ProductSQLRepository("jdbc:sqlite:test.db");
         ProductService productService = new ProductService(productRepository);
+        Renderer renderer = new HTMLRenderer();
 
         context.addServlet(new ServletHolder(new AddProductServlet(productService)), "/add-product");
         context.addServlet(new ServletHolder(new GetProductsServlet(productService)),"/get-products");
-        context.addServlet(new ServletHolder(new QueryServlet()),"/query");
+        context.addServlet(new ServletHolder(new QueryServlet(productService, renderer)),"/query");
 
         server.start();
         server.join();
