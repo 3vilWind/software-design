@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>List</title>
+</head>
+<body>
+<h1>{{ data.core.name }}</h1>
+{% for task in data.tasks %}
+{% if task.done %}
+<div>{{ task.core.name }}</div>
+{% else %}
+<li><form action="/lists/{{data.id}}/tasks/{{ task.id }}/done" method="POST">
+        <button>{{ task.core.name }}</button>
+</form></li>
+{% endif %}
+{% endfor %}
+
+<form action="/lists/{{ data.id }}/tasks" method="POST">
+    <div>
+        <label for="name">Name</label>
+        <input name="name" id="name" />
+    </div>
+    <div>
+        <button>Create</button>
+    </div>
+</form>
+</body>
+</html>

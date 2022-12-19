@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Lists</title>
+</head>
+<body>
+<h1>Lists</h1>
+<ul>
+    {% for task_list in data %}
+    <li>
+        <a href="/lists/{{ task_list.id }}">{{ task_list.core.name }}</a>
+        <form action="/lists/{{ task_list.id }}/drop" method="POST">
+            <button>Drop</button>
+        </form>
+    </li>
+    {% endfor %}
+</ul>
+
+<form action="/lists" method="POST">
+    <div>
+        <label for="name">Name</label>
+        <input name="name" id="name" />
+    </div>
+    <div>
+        <button>Create</button>
+    </div>
+</form>
+
+</body>
+</html>
